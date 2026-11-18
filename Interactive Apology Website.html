@@ -1,0 +1,1453 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>For You, With All My Heart 💗</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <!-- Tone.js for gentle synthesized UI chimes (no external audio files needed) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.js"></script>
+
+  <style>
+    :root {
+      --rose-deep: #c9184a;
+      --rose-mid: #ff4d6d;
+      --rose-soft: #ff8fa3;
+      --rose-pale: #fff0f3;
+      --cream: #fffcf9;
+    }
+
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+      font-family: 'Quicksand', sans-serif;
+      background: linear-gradient(135deg, #fff0f3 0%, #ffdde1 50%, #fce4ec 100%);
+      color: #590d22;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    .font-cursive {
+      font-family: 'Dancing Script', cursive;
+    }
+
+    /* Floating Background Hearts */
+    #hearts-container {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      overflow: hidden;
+      z-index: 0;
+    }
+
+    .floating-heart {
+      position: absolute;
+      bottom: -40px;
+      animation: floatUp linear infinite;
+      opacity: 0.55;
+      filter: drop-shadow(0 2px 4px rgba(201, 24, 74, 0.15));
+    }
+
+    @keyframes floatUp {
+      0% {
+        transform: translateY(0) translateX(0) rotate(0deg) scale(0.8);
+        opacity: 0;
+      }
+      15% {
+        opacity: 0.65;
+      }
+      85% {
+        opacity: 0.65;
+      }
+      100% {
+        transform: translateY(-110vh) translateX(35px) rotate(360deg) scale(1.15);
+        opacity: 0;
+      }
+    }
+
+    /* Screen Transitions */
+    .screen {
+      display: none;
+      opacity: 0;
+      transform: translateY(15px) scale(0.98);
+      transition: opacity 0.45s cubic-bezier(0.22, 1, 0.36, 1),
+                  transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    .screen.active {
+      display: flex;
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+
+    /* Padlock Shackle Animation */
+    #lock-shackle {
+      transition: transform 0.45s cubic-bezier(0.34, 1.56, 0.64, 1);
+      transform-origin: 78px 45px;
+    }
+
+    .unlocked #lock-shackle {
+      transform: translateY(-10px) rotate(22deg);
+    }
+
+    @keyframes shakeLock {
+      0%, 100% { transform: translateX(0); }
+      20% { transform: translateX(-8px) rotate(-4deg); }
+      40% { transform: translateX(8px) rotate(4deg); }
+      60% { transform: translateX(-6px) rotate(-2deg); }
+      80% { transform: translateX(6px) rotate(2deg); }
+    }
+
+    .shake {
+      animation: shakeLock 0.45s ease-in-out;
+    }
+
+    /* Keypad Buttons */
+    .keypad-btn {
+      width: 66px;
+      height: 66px;
+      border-radius: 9999px;
+      background: rgba(255, 224, 230, 0.9);
+      border: 2px solid #ffb3c1;
+      color: #a4133c;
+      font-size: 1.45rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 12px rgba(201, 24, 74, 0.12), inset 0 2px 4px rgba(255, 255, 255, 0.8);
+      transition: all 0.15s ease;
+      cursor: pointer;
+    }
+
+    .keypad-btn:hover {
+      background: #ffc2d1;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 15px rgba(201, 24, 74, 0.2);
+    }
+
+    .keypad-btn:active {
+      transform: scale(0.92);
+      background: #ff8fa3;
+      color: white;
+    }
+
+    /* Primary Romantic Pill Button */
+    .btn-romantic {
+      background: linear-gradient(135deg, #d90429 0%, #c9184a 50%, #ff4d6d 100%);
+      color: #ffffff;
+      font-weight: 700;
+      border-radius: 9999px;
+      padding: 0.85rem 2.2rem;
+      box-shadow: 0 8px 20px -4px rgba(201, 24, 74, 0.45), inset 0 1px 2px rgba(255, 255, 255, 0.4);
+      transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+      border: none;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+    }
+
+    .btn-romantic:hover {
+      transform: translateY(-3px) scale(1.03);
+      box-shadow: 0 12px 24px -4px rgba(201, 24, 74, 0.6);
+    }
+
+    .btn-romantic:active {
+      transform: translateY(0) scale(0.97);
+    }
+
+    /* Secondary Soft Button */
+    .btn-soft {
+      background: #ffe5ec;
+      color: #a4133c;
+      border: 1.5px solid #ffb3c1;
+      font-weight: 700;
+      border-radius: 9999px;
+      padding: 0.7rem 1.6rem;
+      transition: all 0.2s ease;
+      cursor: pointer;
+    }
+
+    .btn-soft:hover {
+      background: #ffc2d1;
+      transform: translateY(-2px);
+    }
+
+    /* Message Box Frame with Left Accent Border (matches video Screen 3) */
+    .story-quote-box {
+      background: rgba(255, 252, 253, 0.92);
+      border-left: 4px solid #c9184a;
+      border-radius: 12px;
+      padding: 1.1rem 1.5rem;
+      box-shadow: 0 8px 24px rgba(201, 24, 74, 0.08);
+      max-width: 440px;
+      width: 100%;
+    }
+
+    /* Realistic 3D Envelope */
+    .envelope-wrapper {
+      perspective: 1000px;
+      cursor: pointer;
+      transition: transform 0.3s ease;
+    }
+
+    .envelope-wrapper:hover {
+      transform: translateY(-6px) scale(1.02);
+    }
+
+    .envelope-body {
+      width: 310px;
+      height: 205px;
+      background: linear-gradient(160deg, #fffdf9 0%, #f9f1e6 100%);
+      border-radius: 12px;
+      position: relative;
+      box-shadow: 0 18px 36px rgba(164, 19, 60, 0.18), 0 0 0 2px #e6ccb2;
+      overflow: hidden;
+    }
+
+    .envelope-pocket {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, rgba(255,255,255,0) 40%, rgba(243, 229, 216, 0.85) 100%);
+      z-index: 2;
+      pointer-events: none;
+    }
+
+    /* Gold trim lines on bottom pocket */
+    .envelope-flap-top {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 125px;
+      background: linear-gradient(180deg, #f8bbd0 0%, #f48fb1 100%);
+      clip-path: polygon(0 0, 100% 0, 50% 100%);
+      transform-origin: top center;
+      transition: transform 0.65s cubic-bezier(0.4, 0, 0.2, 1), z-index 0.2s;
+      z-index: 4;
+      filter: drop-shadow(0 4px 6px rgba(180, 130, 70, 0.35));
+    }
+
+    .envelope-flap-border {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 129px;
+      background: linear-gradient(90deg, #d4af37, #f9e498, #d4af37);
+      clip-path: polygon(0 0, 100% 0, 50% 100%);
+      transform-origin: top center;
+      transition: transform 0.65s cubic-bezier(0.4, 0, 0.2, 1);
+      z-index: 3;
+    }
+
+    .envelope-letter-preview {
+      position: absolute;
+      left: 18px;
+      right: 18px;
+      bottom: 12px;
+      height: 165px;
+      background: #fffcf7;
+      border-radius: 8px;
+      border: 1px solid #f3d5b5;
+      z-index: 1;
+      transition: transform 0.65s cubic-bezier(0.34, 1.56, 0.64, 1) 0.25s;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 12px;
+    }
+
+    .envelope-open .envelope-flap-top,
+    .envelope-open .envelope-flap-border {
+      transform: rotateX(180deg);
+      z-index: 0;
+    }
+
+    .envelope-open .envelope-letter-preview {
+      transform: translateY(-65px);
+      z-index: 5;
+    }
+
+    /* Stationery Lined Paper Card */
+    .stationery-paper {
+      background-color: #fffdf9;
+      background-image: repeating-linear-gradient(
+        transparent,
+        transparent 33px,
+        rgba(212, 175, 55, 0.22) 33px,
+        rgba(212, 175, 55, 0.22) 34px
+      );
+      box-shadow: 0 16px 40px rgba(164, 19, 60, 0.14), 0 0 0 1px rgba(230, 204, 178, 0.7);
+      border-radius: 18px;
+      position: relative;
+    }
+
+    /* Coupon Card Styling */
+    .coupon-card {
+      background: linear-gradient(180deg, #fff5f7 0%, #ffe3e8 100%);
+      border: 2px solid #ffc2d1;
+      border-radius: 20px;
+      padding: 1.25rem 1rem;
+      position: relative;
+      transition: all 0.28s cubic-bezier(0.34, 1.56, 0.64, 1);
+      cursor: pointer;
+      box-shadow: 0 10px 24px rgba(201, 24, 74, 0.08);
+    }
+
+    /* Perforated side notches on coupons */
+    .coupon-card::before,
+    .coupon-card::after {
+      content: '';
+      position: absolute;
+      top: 58%;
+      width: 18px;
+      height: 18px;
+      background: #ffdde1;
+      border-radius: 9999px;
+      transform: translateY(-50%);
+    }
+
+    .coupon-card::before {
+      left: -11px;
+      border-right: 2px solid #ffc2d1;
+    }
+
+    .coupon-card::after {
+      right: -11px;
+      border-left: 2px solid #ffc2d1;
+    }
+
+    .coupon-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 14px 28px rgba(201, 24, 74, 0.16);
+      border-color: #ff758f;
+    }
+
+    .coupon-card.redeemed {
+      background: linear-gradient(180deg, #fff0f3 0%, #ffd6e0 100%);
+      border-color: #c9184a;
+      box-shadow: 0 12px 26px rgba(201, 24, 74, 0.22);
+    }
+
+    /* Subtle pulse animation for icons/badges */
+    @keyframes gentlePulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.08); }
+    }
+
+    .animate-gentle-pulse {
+      animation: gentlePulse 2.2s infinite ease-in-out;
+    }
+
+    @keyframes floatBob {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-7px); }
+    }
+
+    .animate-float-bob {
+      animation: floatBob 3s infinite ease-in-out;
+    }
+  </style>
+</head>
+<body class="flex flex-col items-center justify-center min-h-screen px-4 py-6">
+
+  <!-- =====================================================================
+       EASY CUSTOMIZATION CONFIG (EDIT THIS OBJECT FOR YOUR PARTNER!)
+       ===================================================================== -->
+  <script>
+    const CONFIG = {
+      // 1. Recipient's Name
+      name: "Arushi",
+
+      // 2. Passcode Settings
+      passcode: "2305",          // Default 4-digit code (e.g., anniversary or birthday)
+      acceptAnyPasscode: false,  // Set to true if you want ANY 4 digits to unlock
+      showPasscodeHint: true,    // Shows a subtle hint badge below the keypad
+
+      // 3. Screen 2: Intro Screen ("I Messed Up")
+      intro: {
+        badgeText: "I'm sorry, Please forgive me..",
+        subtitle: "But I'm ready to make it right. Will you hear me out?",
+        buttonText: "Listen to my heart 💞",
+        // Optional: Replace with your own image/GIF URL or leave empty to use the built-in cute cat card
+        customImageUrl: ""
+      },
+
+      // 4. Screen 3: 3-Slide Story Carousel
+      carousel: [
+        {
+          heading: "I Know I Hurt You",
+          message: "I messed up... and I'm really sorry for that. 😔",
+          customImageUrl: "" // Leave empty for cute white bunny holding hearts SVG
+        },
+        {
+          heading: "You Mean Everything",
+          message: "I promise I'll be better for you. My love 😘",
+          customImageUrl: "" // Leave empty for floating romantic hearts cluster
+        },
+        {
+          heading: "I'm Truly Sorry",
+          message: "Please forgive me... You mean so much to me.",
+          customImageUrl: "" // Leave empty for cute crying white bear wiping tears SVG
+        }
+      ],
+
+      // 5. Screen 5: Virtual Peace Offering Letter
+      letter: {
+        header: "A VIRTUAL PEACE OFFERING ❤️",
+        salutation: "My Dearest Arushi,", // Automatically updates if you change CONFIG.name
+        paragraph1: "I'm really sorry, my love. I accidentally upset the most precious and adorable person in my life — you. 🥺💛",
+        paragraph2: "Please forgive me if I hurt you or wasted even a little of your precious time. I promise I didn't mean to. 😭💞",
+        memeCaptionTop: "Itna Gussa aap par acha nahi lagta 🎀",
+        memeCaptionSub: "(Being this angry doesn't suit a cutie like you!)",
+        customMemeUrl: ""
+      },
+
+      // 6. Screen 7: Apology Bribes / Redeemable Coupons
+      coupons: [
+        {
+          id: "blooms",
+          title: "FRESH BLOOMS 🌸",
+          description: "Valid for 1 bouquet delivery + unlimited forehead kisses 💕",
+          redeemed: true
+        },
+        {
+          id: "cuddles",
+          title: "CUDDLE PASS 🧸",
+          description: "Valid for unlimited hugs, cuddles & no drama day 🥰",
+          redeemed: true
+        },
+        {
+          id: "treats",
+          title: "SWEET TREATS 🍫",
+          description: "Valid for your favorite chocolate + my full attention 😘",
+          redeemed: true
+        }
+      ],
+
+      // 7. Screen 8: Peace Treaty Finale
+      finale: {
+        sketchCaption: "flowers for my soulmate",
+        heading: "PEACE TREATY SIGNED! 🕊️",
+        subheading: "NEW BEGINNINGS AHEAD",
+        message: "Thank you for being the most forgiving and wonderful person, Arushi. I love you to the moon and back and I'm never letting go! 💛🙏"
+      }
+    };
+  </script>
+
+  <!-- Floating Background Hearts Layer -->
+  <div id="hearts-container" aria-hidden="true"></div>
+
+  <!-- Sound Toggle Button (Top Right Corner) -->
+  <button id="sound-toggle" onclick="toggleMute()" title="Toggle Sound Effects"
+    class="fixed top-4 right-4 z-50 w-10 h-10 rounded-full bg-white/80 backdrop-blur border border-pink-200 shadow-sm flex items-center justify-center text-rose-600 hover:scale-105 transition">
+    <span id="sound-icon">🔊</span>
+  </button>
+
+  <!-- Main Content Container -->
+  <main class="relative z-10 w-full max-w-2xl mx-auto flex flex-col items-center justify-center">
+
+    <!-- ===================================================================
+         SCREEN 1: PASSCODE LOCK SCREEN
+         =================================================================== -->
+    <section id="screen-1" class="screen active flex-col items-center text-center w-full max-w-sm mx-auto py-4">
+      
+      <!-- 3D Heart Padlock SVG -->
+      <div id="padlock-wrapper" class="relative mb-3 animate-float-bob">
+        <!-- Decorative mini floating hearts around lock -->
+        <span class="absolute -left-8 top-4 text-rose-500 text-lg animate-pulse">💗</span>
+        <span class="absolute -right-8 top-1 text-rose-400 text-base animate-pulse">💕</span>
+        <span class="absolute -left-6 -bottom-2 text-rose-400 text-sm">❤️</span>
+
+        <svg width="118" height="126" viewBox="0 0 120 130" fill="none" xmlns="http://www.w3.org/2000/svg" class="drop-shadow-md">
+          <defs>
+            <linearGradient id="shackleGrad" x1="35" y1="10" x2="85" y2="55" gradientUnits="userSpaceOnUse">
+              <stop offset="0%" stop-color="#f8f9fa"/>
+              <stop offset="45%" stop-color="#dee2e6"/>
+              <stop offset="100%" stop-color="#adb5bd"/>
+            </linearGradient>
+            <linearGradient id="heartBodyGrad" x1="20" y1="40" x2="100" y2="120" gradientUnits="userSpaceOnUse">
+              <stop offset="0%" stop-color="#ff758f"/>
+              <stop offset="50%" stop-color="#ff4d6d"/>
+              <stop offset="100%" stop-color="#c9184a"/>
+            </linearGradient>
+            <linearGradient id="heartRimGrad" x1="15" y1="35" x2="105" y2="125" gradientUnits="userSpaceOnUse">
+              <stop offset="0%" stop-color="#ffb3c1"/>
+              <stop offset="100%" stop-color="#a4133c"/>
+            </linearGradient>
+          </defs>
+
+          <!-- Metal Shackle -->
+          <g id="lock-shackle">
+            <path d="M40 52V32C40 19.8497 48.9543 10 60 10C71.0457 10 80 19.8497 80 32V52" 
+                  stroke="url(#shackleGrad)" stroke-width="11" stroke-linecap="round"/>
+            <path d="M43 50V32C43 21.5066 50.6112 13 60 13C69.3888 13 77 21.5066 77 32V46" 
+                  stroke="#ffffff" stroke-opacity="0.7" stroke-width="2.5" stroke-linecap="round"/>
+          </g>
+
+          <!-- Heart Padlock Body -->
+          <path d="M60 120C60 120 16 92 16 58C16 42.5 28 32 42 32C50.5 32 56.5 36.5 60 42.5C63.5 36.5 69.5 32 78 32C92 32 104 42.5 104 58C104 92 60 120 60 120Z" 
+                fill="url(#heartBodyGrad)" stroke="url(#heartRimGrad)" stroke-width="3"/>
+
+          <!-- Glossy 3D Highlight on Heart -->
+          <path d="M27 56C27 46 34 40 42 40C47 40 51 42 54 46" 
+                stroke="white" stroke-opacity="0.55" stroke-width="4" stroke-linecap="round"/>
+
+          <!-- Keyhole Plate -->
+          <circle cx="60" cy="71" r="7" fill="#590d22"/>
+          <path d="M57 73L55 88H65L63 73H57Z" fill="#590d22"/>
+          <circle cx="60" cy="71" r="9" stroke="#ffb3c1" stroke-width="1.5" stroke-opacity="0.6"/>
+        </svg>
+      </div>
+
+      <h1 class="text-xl sm:text-2xl font-bold tracking-widest text-[#800f2f] mb-4">
+        ENTER PASSCODE
+      </h1>
+
+      <!-- 4 Passcode Display Boxes -->
+      <div id="passcode-boxes" class="flex items-center justify-center gap-3 mb-2">
+        <div class="pass-box w-12 h-14 rounded-xl bg-[#c9184a] text-white text-2xl font-bold flex items-center justify-center shadow-md border-2 border-[#ff758f] transition-all"></div>
+        <div class="pass-box w-12 h-14 rounded-xl bg-[#fff0f3] text-[#c9184a] text-2xl font-bold flex items-center justify-center shadow-inner border-2 border-[#ffb3c1] transition-all"></div>
+        <div class="pass-box w-12 h-14 rounded-xl bg-[#fff0f3] text-[#c9184a] text-2xl font-bold flex items-center justify-center shadow-inner border-2 border-[#ffb3c1] transition-all"></div>
+        <div class="pass-box w-12 h-14 rounded-xl bg-[#fff0f3] text-[#c9184a] text-2xl font-bold flex items-center justify-center shadow-inner border-2 border-[#ffb3c1] transition-all"></div>
+      </div>
+
+      <p id="passcode-subtitle" class="text-xs sm:text-sm text-[#a4133c]/80 font-medium mb-5">
+        Something special is waiting for you
+      </p>
+
+      <!-- Circular Pastel Pink Keypad -->
+      <div class="grid grid-cols-3 gap-3.5 justify-items-center max-w-[240px] mx-auto mb-4">
+        <button class="keypad-btn" onclick="pressDigit('1')">1</button>
+        <button class="keypad-btn" onclick="pressDigit('2')">2</button>
+        <button class="keypad-btn" onclick="pressDigit('3')">3</button>
+        <button class="keypad-btn" onclick="pressDigit('4')">4</button>
+        <button class="keypad-btn" onclick="pressDigit('5')">5</button>
+        <button class="keypad-btn" onclick="pressDigit('6')">6</button>
+        <button class="keypad-btn" onclick="pressDigit('7')">7</button>
+        <button class="keypad-btn" onclick="pressDigit('8')">8</button>
+        <button class="keypad-btn" onclick="pressDigit('9')">9</button>
+        <div></div>
+        <button class="keypad-btn" onclick="pressDigit('0')">0</button>
+        <button class="keypad-btn !bg-rose-100/70 !text-base" onclick="backspaceDigit()" title="Backspace">⌫</button>
+      </div>
+
+      <!-- Subtle Passcode Hint Pill -->
+      <div id="passcode-hint-container" class="mt-1">
+        <button onclick="autoFillPasscode()" class="text-xs text-[#a4133c]/70 hover:text-[#c9184a] bg-white/60 hover:bg-white/90 px-3 py-1 rounded-full border border-pink-200 transition shadow-sm">
+          💡 Hint: Passcode is <span id="hint-code-text" class="font-bold underline">2305</span> (Tap to auto-fill)
+        </button>
+      </div>
+    </section>
+
+    <!-- ===================================================================
+         SCREEN 2: INTRO SCREEN ("I MESSED UP")
+         =================================================================== -->
+    <section id="screen-2" class="screen flex-col items-center text-center w-full max-w-md mx-auto py-6">
+      
+      <!-- Cute Apologetic Cat Sticker Card with Floating Heart Badge -->
+      <div class="relative bg-white p-3.5 rounded-2xl shadow-lg border border-pink-100 mb-6 animate-float-bob">
+        <!-- Floating Heart Badge Top-Right -->
+        <div class="absolute -top-3 -right-3 w-9 h-9 rounded-full bg-[#c9184a] text-white flex items-center justify-center shadow-md border-2 border-white animate-gentle-pulse">
+          🤍
+        </div>
+
+        <div id="intro-illustration-slot" class="w-44 h-44 sm:w-48 sm:h-48 rounded-xl overflow-hidden bg-[#f8edeb] flex flex-col items-center justify-between pt-3 pb-2 px-2 relative">
+          <!-- Cute Sad Ginger Kitten SVG Artwork -->
+          <svg viewBox="0 0 200 170" class="w-36 h-36">
+            <!-- Kitten Ears -->
+            <path d="M42 65 L25 22 L72 42 Z" fill="#e09f67" stroke="#8d5b4c" stroke-width="2.5" stroke-linejoin="round"/>
+            <path d="M44 58 L33 30 L64 44 Z" fill="#f4acb7"/>
+            <path d="M158 65 L175 22 L128 42 Z" fill="#e09f67" stroke="#8d5b4c" stroke-width="2.5" stroke-linejoin="round"/>
+            <path d="M156 58 L167 30 L136 44 Z" fill="#f4acb7"/>
+            <!-- Kitten Head & Body -->
+            <ellipse cx="100" cy="145" rx="52" ry="35" fill="#f3c68f" stroke="#8d5b4c" stroke-width="2.5"/>
+            <circle cx="100" cy="82" r="54" fill="#f3c68f" stroke="#8d5b4c" stroke-width="2.5"/>
+            <!-- Forehead Tabby Stripes -->
+            <path d="M100 34 V50 M88 37 L92 50 M112 37 L108 50" stroke="#b5654d" stroke-width="3.5" stroke-linecap="round"/>
+            <!-- Big Pleading Puppy/Kitten Eyes -->
+            <ellipse cx="76" cy="82" rx="13" ry="14" fill="#2b2d42"/>
+            <circle cx="71" cy="77" r="4.5" fill="white"/>
+            <circle cx="81" cy="87" r="2.2" fill="white"/>
+            <ellipse cx="124" cy="82" rx="13" ry="14" fill="#2b2d42"/>
+            <circle cx="119" cy="77" r="4.5" fill="white"/>
+            <circle cx="129" cy="87" r="2.2" fill="white"/>
+            <!-- Worried Eyebrows -->
+            <path d="M60 66 Q74 62 84 69" stroke="#8d5b4c" stroke-width="3" stroke-linecap="round" fill="none"/>
+            <path d="M140 66 Q126 62 116 69" stroke="#8d5b4c" stroke-width="3" stroke-linecap="round" fill="none"/>
+            <!-- Cute Pink Nose & Pleading Mouth -->
+            <polygon points="96,95 104,95 100,101" fill="#ff758f"/>
+            <path d="M92 106 Q100 101 108 106" stroke="#8d5b4c" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+            <!-- Rosy Cheeks & Teardrop -->
+            <ellipse cx="58" cy="94" rx="8" ry="4.5" fill="#ff8fa3" opacity="0.6"/>
+            <ellipse cx="142" cy="94" rx="8" ry="4.5" fill="#ff8fa3" opacity="0.6"/>
+            <path d="M63 94 Q59 104 64 107 Q69 104 65 94 Z" fill="#4cc9f0"/>
+            <!-- Paws touching together apologetically -->
+            <ellipse cx="86" cy="136" rx="14" ry="10" fill="#fff8f0" stroke="#8d5b4c" stroke-width="2.5"/>
+            <ellipse cx="114" cy="136" rx="14" ry="10" fill="#fff8f0" stroke="#8d5b4c" stroke-width="2.5"/>
+          </svg>
+          <p id="intro-badge-caption" class="text-xs font-bold text-[#590d22] bg-white/85 px-2.5 py-1 rounded-md shadow-sm -mt-4 z-10">
+            I'm sorry, Please forgive me..
+          </p>
+        </div>
+      </div>
+
+      <!-- Cursive Heading -->
+      <h2 class="font-cursive text-4xl sm:text-5xl text-[#800f2f] mb-3 px-2">
+        I Messed Up, <span class="recipient-name">Arushi</span> 🥺
+      </h2>
+
+      <!-- Subtitle -->
+      <p id="intro-subtitle" class="text-base sm:text-lg text-[#590d22]/85 max-w-sm mb-8 leading-relaxed">
+        But I'm ready to make it right. Will you hear me out?
+      </p>
+
+      <!-- CTA Button -->
+      <button onclick="goToScreen(3)" id="intro-btn" class="btn-romantic text-base sm:text-lg">
+        Listen to my heart 💞
+      </button>
+    </section>
+
+    <!-- ===================================================================
+         SCREEN 3: STORY CAROUSEL (3 SUB-SLIDES)
+         =================================================================== -->
+    <section id="screen-3" class="screen flex-col items-center text-center w-full max-w-lg mx-auto py-6">
+      
+      <!-- Dynamic Illustration Stage -->
+      <div id="carousel-illustration" class="w-48 h-48 sm:w-52 sm:h-52 bg-white/90 rounded-2xl shadow-md border border-pink-100 flex items-center justify-center p-4 mb-6 animate-float-bob">
+        <!-- Populated dynamically by renderCarouselSlide() -->
+      </div>
+
+      <!-- Cursive Slide Heading -->
+      <h2 id="carousel-heading" class="font-cursive text-4xl sm:text-5xl text-[#b5173e] mb-5">
+        I Know I Hurt You
+      </h2>
+
+      <!-- Boxed Quote Card with Left Red Border -->
+      <div class="story-quote-box mb-7">
+        <p id="carousel-message" class="text-base sm:text-lg text-[#590d22] font-medium leading-relaxed">
+          I messed up... and I'm really sorry for that. 😔
+        </p>
+      </div>
+
+      <!-- Slide Progress Dots -->
+      <div class="flex items-center gap-2 mb-6">
+        <span id="dot-0" class="w-2.5 h-2.5 rounded-full bg-[#c9184a] transition-all"></span>
+        <span id="dot-1" class="w-2.5 h-2.5 rounded-full bg-pink-300 transition-all"></span>
+        <span id="dot-2" class="w-2.5 h-2.5 rounded-full bg-pink-300 transition-all"></span>
+      </div>
+
+      <!-- Navigation Buttons -->
+      <div class="flex items-center justify-center gap-4">
+        <button onclick="prevCarouselSlide()" class="btn-soft text-sm sm:text-base">
+          ← Back
+        </button>
+        <button onclick="nextCarouselSlide()" class="btn-romantic !py-2.5 !px-7 text-sm sm:text-base">
+          Next →
+        </button>
+      </div>
+    </section>
+
+    <!-- ===================================================================
+         SCREEN 4: INTERACTIVE ENVELOPE ("CLICK TO OPEN")
+         =================================================================== -->
+    <section id="screen-4" class="screen flex-col items-center text-center w-full max-w-md mx-auto py-8">
+      
+      <div id="envelope-interactive" onclick="openEnvelope()" class="envelope-wrapper mb-8" role="button" aria-label="Click to open apology letter">
+        <div class="envelope-body">
+          <!-- Gold Trim Behind Flap -->
+          <div class="envelope-flap-border"></div>
+          <!-- Pink Top Flap -->
+          <div class="envelope-flap-top"></div>
+
+          <!-- Hidden Letter Preview Inside -->
+          <div class="envelope-letter-preview">
+            <span class="text-xs font-bold tracking-widest text-rose-500 mb-1">FOR <span class="recipient-name uppercase">ARUSHI</span></span>
+            <p class="font-cursive text-xl text-[#800f2f]">My Dearest Love...</p>
+          </div>
+
+          <!-- Front Envelope Pocket Lines -->
+          <div class="envelope-pocket">
+            <svg viewBox="0 0 310 205" class="w-full h-full">
+              <path d="M0 205 L125 110 M310 205 L185 110" stroke="#e6ccb2" stroke-width="2"/>
+            </svg>
+          </div>
+
+          <!-- Gold & Rose Heart Wax Seal -->
+          <div id="envelope-seal" class="absolute left-1/2 top-[118px] -translate-x-1/2 -translate-y-1/2 z-10 w-11 h-11 rounded-full bg-gradient-to-br from-[#ff4d6d] to-[#a4133c] border-2 border-[#f9e498] shadow-md flex items-center justify-center text-white text-lg transition-transform duration-300">
+            ❤️
+          </div>
+        </div>
+      </div>
+
+      <p onclick="openEnvelope()" class="text-sm sm:text-base font-bold tracking-widest text-[#c9184a] cursor-pointer flex items-center gap-1.5 animate-gentle-pulse">
+        CLICK TO OPEN ❤️
+      </p>
+    </section>
+
+    <!-- ===================================================================
+         SCREEN 5: VIRTUAL PEACE OFFERING (LETTER VIEW)
+         =================================================================== -->
+    <section id="screen-5" class="screen flex-col items-center text-center w-full max-w-lg mx-auto py-4">
+      
+      <div class="stationery-paper w-full p-6 sm:p-8 text-center">
+        <!-- Small Top Header -->
+        <div class="inline-block border-b-2 border-rose-300 pb-1 mb-5">
+          <span id="letter-header" class="text-xs sm:text-sm font-bold tracking-widest text-[#c9184a] uppercase">
+            A VIRTUAL PEACE OFFERING ❤️
+          </span>
+        </div>
+
+        <!-- Handwritten Cursive Letter Body -->
+        <h3 id="letter-salutation" class="font-cursive text-3xl sm:text-4xl text-[#4a0e1e] mb-4">
+          My Dearest <span class="recipient-name">Arushi</span>,
+        </h3>
+
+        <p id="letter-p1" class="font-cursive text-2xl sm:text-[26px] text-[#590d22] leading-[34px] mb-4">
+          I'm really sorry, my love. I accidentally upset the most precious and adorable person in my life — you. 🥺💛
+        </p>
+
+        <p id="letter-p2" class="font-cursive text-2xl sm:text-[26px] text-[#590d22] leading-[34px] mb-6">
+          Please forgive me if I hurt you or wasted even a little of your precious time. I promise I didn't mean to. 😭💞
+        </p>
+
+        <!-- Teary-Eyed White Cat Meme Card with Pink Bow -->
+        <div class="relative w-44 sm:w-48 mx-auto rounded-2xl overflow-hidden shadow-md border-2 border-pink-200 bg-[#fff0f3] pt-3 pb-2 px-2 mb-6">
+          <div id="letter-meme-slot" class="flex flex-col items-center">
+            <svg viewBox="0 0 180 145" class="w-36 h-28">
+              <!-- White Fluffy Ears -->
+              <path d="M35 58 L22 18 L66 36 Z" fill="#ffffff" stroke="#b5838d" stroke-width="2.5" stroke-linejoin="round"/>
+              <path d="M37 52 L28 25 L58 38 Z" fill="#ffb3c1"/>
+              <path d="M145 58 L158 18 L114 36 Z" fill="#ffffff" stroke="#b5838d" stroke-width="2.5" stroke-linejoin="round"/>
+              <path d="M143 52 L152 25 L122 38 Z" fill="#ffb3c1"/>
+              <!-- Fluffy White Cat Head -->
+              <ellipse cx="90" cy="78" rx="52" ry="44" fill="#ffffff" stroke="#b5838d" stroke-width="2.5"/>
+              <!-- Cute Pink Ribbon Bow on Ear -->
+              <g transform="translate(118, 22) rotate(15)">
+                <path d="M0 10 L-14 0 L-14 20 Z" fill="#ff4d6d"/>
+                <path d="M0 10 L14 0 L14 20 Z" fill="#ff4d6d"/>
+                <circle cx="0" cy="10" r="4.5" fill="#c9184a"/>
+              </g>
+              <!-- Giant Glossy Watery Eyes -->
+              <circle cx="67" cy="76" r="13.5" fill="#2b2d42"/>
+              <circle cx="62" cy="71" r="5" fill="#ffffff"/>
+              <circle cx="72" cy="82" r="2.5" fill="#ffffff"/>
+              <path d="M56 85 Q67 93 78 85" stroke="#4cc9f0" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+
+              <circle cx="113" cy="76" r="13.5" fill="#2b2d42"/>
+              <circle cx="108" cy="71" r="5" fill="#ffffff"/>
+              <circle cx="118" cy="82" r="2.5" fill="#ffffff"/>
+              <path d="M102 85 Q113 93 124 85" stroke="#4cc9f0" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+
+              <!-- Tiny Pink Nose & Pouty Mouth -->
+              <polygon points="87,88 93,88 90,93" fill="#ff758f"/>
+              <path d="M83 98 Q90 93 97 98" stroke="#6d597a" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+              <!-- Blush -->
+              <ellipse cx="48" cy="86" rx="8" ry="4" fill="#ff8fa3" opacity="0.65"/>
+              <ellipse cx="132" cy="86" rx="8" ry="4" fill="#ff8fa3" opacity="0.65"/>
+            </svg>
+            <!-- Meme Overlay Text -->
+            <p id="letter-meme-top" class="text-xs font-bold text-[#800f2f] leading-snug px-1">
+              Itna Gussa aap par acha nahi lagta 🎀
+            </p>
+            <p id="letter-meme-sub" class="text-[10px] text-[#a4133c]/80 mt-0.5">
+              (Being this angry doesn't suit a cutie like you!)
+            </p>
+          </div>
+        </div>
+
+        <!-- Continue Button -->
+        <button onclick="goToScreen(6)" class="btn-romantic text-base">
+          Continue →
+        </button>
+      </div>
+    </section>
+
+    <!-- ===================================================================
+         SCREEN 6: FORGIVENESS METER
+         =================================================================== -->
+    <section id="screen-6" class="screen flex-col items-center text-center w-full max-w-md mx-auto py-6">
+      
+      <div class="bg-white/95 w-full rounded-3xl p-6 sm:p-8 shadow-xl border border-pink-100 flex flex-col items-center">
+        
+        <h2 class="text-base sm:text-lg font-bold tracking-widest text-[#800f2f] uppercase mb-5">
+          FORGIVENESS METER ❤️
+        </h2>
+
+        <!-- Two Happy Bears Holding Hands Illustration -->
+        <div class="w-48 h-40 bg-[#fff9f5] rounded-2xl border border-pink-100 flex items-center justify-center p-2 mb-6 relative overflow-hidden">
+          <span class="absolute top-2 left-6 text-rose-400 text-xs animate-bounce">💗</span>
+          <span class="absolute top-3 right-6 text-rose-500 text-sm animate-pulse">💕</span>
+          <span class="absolute top-1 left-1/2 -translate-x-1/2 text-rose-500 text-base animate-gentle-pulse">❤️</span>
+
+          <svg viewBox="0 0 220 150" class="w-44 h-36">
+            <!-- Left Bear -->
+            <g transform="translate(15, 18)">
+              <circle cx="28" cy="24" r="11" fill="#ffffff" stroke="#6d597a" stroke-width="2.5"/>
+              <circle cx="76" cy="20" r="11" fill="#ffffff" stroke="#6d597a" stroke-width="2.5"/>
+              <ellipse cx="54" cy="95" rx="28" ry="30" fill="#ffffff" stroke="#6d597a" stroke-width="2.5"/>
+              <circle cx="52" cy="52" r="34" fill="#ffffff" stroke="#6d597a" stroke-width="2.5"/>
+              <!-- Happy Closed Arcs for Eyes -->
+              <path d="M36 48 Q41 41 46 48" stroke="#4a4e69" stroke-width="2.8" fill="none" stroke-linecap="round"/>
+              <path d="M58 48 Q63 41 68 48" stroke="#4a4e69" stroke-width="2.8" fill="none" stroke-linecap="round"/>
+              <!-- Blush & Smile -->
+              <ellipse cx="32" cy="55" rx="6" ry="3.5" fill="#ff8fa3" opacity="0.75"/>
+              <ellipse cx="72" cy="55" rx="6" ry="3.5" fill="#ff8fa3" opacity="0.75"/>
+              <path d="M48 56 Q52 62 57 56" stroke="#4a4e69" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+            </g>
+
+            <!-- Right Bear -->
+            <g transform="translate(105, 20)">
+              <circle cx="24" cy="20" r="11" fill="#ffffff" stroke="#6d597a" stroke-width="2.5"/>
+              <circle cx="72" cy="24" r="11" fill="#ffffff" stroke="#6d597a" stroke-width="2.5"/>
+              <ellipse cx="46" cy="93" rx="28" ry="30" fill="#ffffff" stroke="#6d597a" stroke-width="2.5"/>
+              <circle cx="48" cy="52" r="34" fill="#ffffff" stroke="#6d597a" stroke-width="2.5"/>
+              <!-- Happy Eyes -->
+              <path d="M32 48 Q37 41 42 48" stroke="#4a4e69" stroke-width="2.8" fill="none" stroke-linecap="round"/>
+              <path d="M54 48 Q59 41 64 48" stroke="#4a4e69" stroke-width="2.8" fill="none" stroke-linecap="round"/>
+              <!-- Blush & Smile -->
+              <ellipse cx="28" cy="55" rx="6" ry="3.5" fill="#ff8fa3" opacity="0.75"/>
+              <ellipse cx="68" cy="55" rx="6" ry="3.5" fill="#ff8fa3" opacity="0.75"/>
+              <path d="M43 56 Q48 62 53 56" stroke="#4a4e69" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+            </g>
+
+            <!-- Joined Paws in Center -->
+            <ellipse cx="110" cy="96" rx="14" ry="9" fill="#ffffff" stroke="#6d597a" stroke-width="2.5"/>
+          </svg>
+        </div>
+
+        <!-- Animated Progress Bar -->
+        <div class="w-full bg-pink-100 h-6 rounded-full overflow-hidden p-1 shadow-inner mb-3 cursor-pointer" onclick="boostForgivenessMeter()" title="Tap to boost!">
+          <div id="forgiveness-bar" class="h-full bg-gradient-to-r from-[#ff758f] via-[#ff4d6d] to-[#c9184a] rounded-full transition-all duration-150 flex items-center justify-end pr-2" style="width: 0%;">
+            <span class="text-[10px] text-white">💗</span>
+          </div>
+        </div>
+
+        <!-- Percentage Counter -->
+        <p id="forgiveness-percent" class="text-base sm:text-lg font-bold tracking-wider text-[#c9184a] mb-5">
+          0% FORGIVEN ❤️
+        </p>
+
+        <!-- Action Button -->
+        <button id="forgiveness-btn" onclick="goToScreen(7)" class="btn-romantic w-full sm:w-auto text-sm sm:text-base opacity-60 pointer-events-none transition-opacity">
+          YOU'RE FORGIVEN! 💗
+        </button>
+      </div>
+    </section>
+
+    <!-- ===================================================================
+         SCREEN 7: APOLOGY BRIBES / REDEEMABLE COUPONS
+         =================================================================== -->
+    <section id="screen-7" class="screen flex-col items-center text-center w-full max-w-2xl mx-auto py-4">
+      
+      <p class="text-xs sm:text-sm font-bold tracking-widest text-[#a4133c] uppercase mb-1">
+        PEACE OFFERING PERKS 🎁
+      </p>
+      <h2 class="font-cursive text-3xl sm:text-4xl text-[#800f2f] mb-5">
+        Tap Your Apology Bribes to Claim!
+      </h2>
+
+      <!-- 3 Responsive Coupon Cards -->
+      <div id="coupons-grid" class="grid grid-cols-1 sm:grid-cols-3 gap-4 w-full mb-7">
+        <!-- Populated dynamically from CONFIG.coupons -->
+      </div>
+
+      <!-- Enough Bribes CTA -->
+      <button onclick="goToScreen(8)" class="btn-romantic text-base sm:text-lg tracking-wide uppercase">
+        ENOUGH BRIBES!
+      </button>
+    </section>
+
+    <!-- ===================================================================
+         SCREEN 8: PEACE TREATY SIGNED! (FINALE)
+         =================================================================== -->
+    <section id="screen-8" class="screen flex-col items-center text-center w-full max-w-lg mx-auto py-4">
+      
+      <div class="bg-[#fffcf9] w-full rounded-3xl p-6 sm:p-8 shadow-xl border border-pink-100 flex flex-col items-center">
+        
+        <!-- Cute Hand-Drawn Sketch Cat Holding Flowers ("flowers for my soulmate") -->
+        <div class="w-40 h-40 bg-white rounded-2xl shadow-sm border border-pink-100 p-3 flex flex-col items-center justify-center mb-5 animate-float-bob">
+          <p id="finale-sketch-caption" class="text-[11px] font-bold text-[#590d22] leading-tight mb-1 font-mono">
+            flowers for<br/>my soulmate
+          </p>
+          <svg viewBox="0 0 140 115" class="w-28 h-24">
+            <!-- Doodle Cat Outline -->
+            <path d="M38 98 L38 52 L28 28 L48 40 L72 40 L92 28 L82 52 L82 98 Z" fill="#fffdf7" stroke="#2b2d42" stroke-width="2.5" stroke-linejoin="round"/>
+            <!-- Doodle Eyes & Whiskers -->
+            <circle cx="50" cy="58" r="2.5" fill="#2b2d42"/>
+            <circle cx="70" cy="58" r="2.5" fill="#2b2d42"/>
+            <path d="M56 64 Q60 67 64 64" stroke="#2b2d42" stroke-width="2" fill="none" stroke-linecap="round"/>
+            <path d="M26 58 H36 M25 64 H36 M84 58 H94 M84 64 H95" stroke="#2b2d42" stroke-width="1.8" stroke-linecap="round"/>
+            <!-- Bouquet of Flowers Held in Right Paw -->
+            <path d="M80 75 L108 58 M98 85 L105 55 M112 85 L105 55" stroke="#2d6a4f" stroke-width="2.5" stroke-linecap="round"/>
+            <!-- Flower Blossoms -->
+            <circle cx="105" cy="48" r="8" fill="#ff4d6d"/>
+            <circle cx="105" cy="48" r="3" fill="#ffd166"/>
+            <circle cx="93" cy="54" r="7" fill="#ff8fa3"/>
+            <circle cx="93" cy="54" r="2.5" fill="#ffd166"/>
+            <circle cx="117" cy="55" r="7" fill="#c9184a"/>
+            <circle cx="117" cy="55" r="2.5" fill="#ffd166"/>
+          </svg>
+        </div>
+
+        <!-- Finale Heading -->
+        <h2 id="finale-heading" class="text-2xl sm:text-3xl font-extrabold text-[#c9184a] tracking-wide mb-1">
+          PEACE TREATY SIGNED! 🕊️
+        </h2>
+
+        <!-- Subheading -->
+        <p id="finale-subheading" class="text-xs sm:text-sm font-bold tracking-[0.2em] text-[#e07a5f] uppercase mb-4">
+          NEW BEGINNINGS AHEAD
+        </p>
+
+        <!-- Heartfelt Closing Paragraph -->
+        <p id="finale-message" class="text-sm sm:text-base text-[#590d22]/90 leading-relaxed max-w-md mb-5">
+          Thank you for being the most forgiving and wonderful person. I love you to the moon and back and I'm never letting go! 💛🙏
+        </p>
+
+        <!-- Row of 4 Glowing Red Hearts -->
+        <div class="flex items-center justify-center gap-2.5 text-2xl mb-6">
+          <span class="animate-bounce" style="animation-delay: 0ms;">❤️</span>
+          <span class="animate-bounce" style="animation-delay: 150ms;">❤️</span>
+          <span class="animate-bounce" style="animation-delay: 300ms;">❤️</span>
+          <span class="animate-bounce" style="animation-delay: 450ms;">❤️</span>
+        </div>
+
+        <!-- Replay Button -->
+        <button onclick="replayExperience()" class="px-6 py-2.5 rounded-full bg-rose-100 hover:bg-rose-200 text-[#a4133c] font-bold text-sm border border-pink-300 transition flex items-center gap-2 shadow-sm">
+          ↻ Replay
+        </button>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- =====================================================================
+       APPLICATION LOGIC & INTERACTIVE AUDIO/ANIMATIONS
+       ===================================================================== -->
+  <script>
+    // State Variables
+    let enteredCode = "";
+    let currentScreen = 1;
+    let currentCarouselIndex = 0;
+    let forgivenessValue = 0;
+    let forgivenessInterval = null;
+    let isMuted = false;
+    let synth = null;
+
+    // Initialize Web Audio Synth via Tone.js on first user interaction
+    function initAudio() {
+      if (!synth && typeof Tone !== "undefined") {
+        try {
+          synth = new Tone.PolySynth(Tone.Synth, {
+            oscillator: { type: "sine" },
+            envelope: { attack: 0.01, decay: 0.2, sustain: 0.05, release: 0.4 }
+          }).toDestination();
+          synth.volume.value = -10;
+        } catch (e) {
+          // Audio fallback if blocked
+        }
+      }
+    }
+
+    function playChime(notes = ["C5"], duration = "16n") {
+      if (isMuted) return;
+      initAudio();
+      if (synth && Tone.context.state !== "running") {
+        Tone.start().catch(() => {});
+      }
+      try {
+        if (synth) synth.triggerAttackRelease(notes, duration);
+      } catch (e) {}
+    }
+
+    function toggleMute() {
+      isMuted = !isMuted;
+      document.getElementById("sound-icon").textContent = isMuted ? "🔇" : "🔊";
+    }
+
+    // Apply CONFIG values across the DOM
+    function applyConfiguration() {
+      // Recipient Name everywhere
+      document.querySelectorAll(".recipient-name").forEach(el => {
+        el.textContent = CONFIG.name;
+      });
+
+      // Passcode Hint
+      const hintContainer = document.getElementById("passcode-hint-container");
+      if (CONFIG.showPasscodeHint) {
+        document.getElementById("hint-code-text").textContent = CONFIG.passcode;
+        hintContainer.style.display = "block";
+      } else {
+        hintContainer.style.display = "none";
+      }
+
+      // Screen 2: Intro
+      document.getElementById("intro-badge-caption").textContent = CONFIG.intro.badgeText;
+      document.getElementById("intro-subtitle").textContent = CONFIG.intro.subtitle;
+      document.getElementById("intro-btn").textContent = CONFIG.intro.buttonText;
+      if (CONFIG.intro.customImageUrl) {
+        document.getElementById("intro-illustration-slot").innerHTML = `
+          <img src="${CONFIG.intro.customImageUrl}" alt="Apology Sticker" class="w-full h-36 object-cover rounded-lg" />
+          <p class="text-xs font-bold text-[#590d22] bg-white/90 px-2.5 py-1 rounded-md shadow-sm -mt-3 z-10">${CONFIG.intro.badgeText}</p>
+        `;
+      }
+
+      // Screen 5: Letter
+      document.getElementById("letter-header").textContent = CONFIG.letter.header;
+      document.getElementById("letter-salutation").innerHTML = `My Dearest <span class="recipient-name">${CONFIG.name}</span>,`;
+      document.getElementById("letter-p1").textContent = CONFIG.letter.paragraph1;
+      document.getElementById("letter-p2").textContent = CONFIG.letter.paragraph2;
+      document.getElementById("letter-meme-top").textContent = CONFIG.letter.memeCaptionTop;
+      document.getElementById("letter-meme-sub").textContent = CONFIG.letter.memeCaptionSub;
+      if (CONFIG.letter.customMemeUrl) {
+        document.getElementById("letter-meme-slot").innerHTML = `
+          <img src="${CONFIG.letter.customMemeUrl}" alt="Cute Cat Meme" class="w-full h-32 object-cover rounded-lg mb-1" />
+          <p class="text-xs font-bold text-[#800f2f] leading-snug">${CONFIG.letter.memeCaptionTop}</p>
+        `;
+      }
+
+      // Screen 7: Render Coupons
+      renderCoupons();
+
+      // Screen 8: Finale
+      document.getElementById("finale-sketch-caption").innerHTML = CONFIG.finale.sketchCaption.replace(" ", "<br/>");
+      document.getElementById("finale-heading").textContent = CONFIG.finale.heading;
+      document.getElementById("finale-subheading").textContent = CONFIG.finale.subheading;
+      document.getElementById("finale-message").textContent = CONFIG.finale.message;
+    }
+
+    // Create Floating Background Hearts
+    function createFloatingHearts() {
+      const container = document.getElementById("hearts-container");
+      const symbols = ["💗", "💕", "💖", "🌸", "❤️"];
+      for (let i = 0; i < 18; i++) {
+        const heart = document.createElement("span");
+        heart.className = "floating-heart";
+        heart.textContent = symbols[i % symbols.length];
+        heart.style.left = `${Math.random() * 96}%`;
+        heart.style.fontSize = `${14 + Math.random() * 14}px`;
+        heart.style.animationDuration = `${8 + Math.random() * 9}s`;
+        heart.style.animationDelay = `${Math.random() * 6}s`;
+        container.appendChild(heart);
+      }
+    }
+
+    // Navigation Helper
+    function goToScreen(screenNumber) {
+      playChime(["E5", "G5"], "16n");
+      document.querySelectorAll(".screen").forEach(sec => {
+        sec.classList.remove("active");
+      });
+
+      const target = document.getElementById(`screen-${screenNumber}`);
+      if (target) {
+        target.classList.add("active");
+        currentScreen = screenNumber;
+      }
+
+      // Screen-specific lifecycle hooks
+      if (screenNumber === 3) {
+        currentCarouselIndex = 0;
+        renderCarouselSlide();
+      } else if (screenNumber === 4) {
+        document.getElementById("envelope-interactive").classList.remove("envelope-open");
+      } else if (screenNumber === 6) {
+        startForgivenessMeter();
+      } else if (screenNumber === 8) {
+        celebrateHeartBurst();
+      }
+    }
+
+    // =====================================================================
+    // SCREEN 1: PASSCODE LOGIC
+    // =====================================================================
+    function updatePasscodeUI() {
+      const boxes = document.querySelectorAll("#passcode-boxes .pass-box");
+      boxes.forEach((box, idx) => {
+        if (idx < enteredCode.length) {
+          box.textContent = enteredCode[idx];
+          box.className = "pass-box w-12 h-14 rounded-xl bg-[#c9184a] text-white text-2xl font-bold flex items-center justify-center shadow-md border-2 border-[#ff758f] scale-105 transition-all";
+        } else {
+          box.textContent = "";
+          box.className = "pass-box w-12 h-14 rounded-xl bg-[#fff0f3] text-[#c9184a] text-2xl font-bold flex items-center justify-center shadow-inner border-2 border-[#ffb3c1] transition-all";
+        }
+      });
+    }
+
+    function pressDigit(digit) {
+      if (enteredCode.length >= 4) return;
+      enteredCode += digit;
+      playChime(["C5"], "32n");
+      updatePasscodeUI();
+
+      if (enteredCode.length === 4) {
+        verifyPasscode();
+      }
+    }
+
+    function backspaceDigit() {
+      if (enteredCode.length > 0) {
+        enteredCode = enteredCode.slice(0, -1);
+        playChime(["A4"], "32n");
+        updatePasscodeUI();
+      }
+    }
+
+    function autoFillPasscode() {
+      enteredCode = "";
+      updatePasscodeUI();
+      const digits = CONFIG.passcode.split("");
+      digits.forEach((d, idx) => {
+        setTimeout(() => {
+          pressDigit(d);
+        }, idx * 140);
+      });
+    }
+
+    function verifyPasscode() {
+      const isValid = CONFIG.acceptAnyPasscode || enteredCode === CONFIG.passcode;
+      const lockWrapper = document.getElementById("padlock-wrapper");
+      const subtitle = document.getElementById("passcode-subtitle");
+
+      if (isValid) {
+        lockWrapper.classList.add("unlocked");
+        subtitle.textContent = "Unlocked with love! 💗";
+        subtitle.classList.add("text-rose-600", "font-bold");
+        playChime(["C5", "E5", "G5", "C6"], "8n");
+        setTimeout(() => {
+          goToScreen(2);
+        }, 650);
+      } else {
+        playChime(["F3", "B3"], "8n");
+        lockWrapper.classList.add("shake");
+        subtitle.textContent = `Oops! Try ${CONFIG.passcode} 💕`;
+        subtitle.classList.add("text-rose-600", "font-bold");
+        setTimeout(() => {
+          lockWrapper.classList.remove("shake");
+          enteredCode = "";
+          updatePasscodeUI();
+        }, 550);
+      }
+    }
+
+    // Allow physical keyboard number entry on Screen 1
+    window.addEventListener("keydown", (e) => {
+      if (currentScreen !== 1) return;
+      if (e.key >= "0" && e.key <= "9") {
+        pressDigit(e.key);
+      } else if (e.key === "Backspace") {
+        backspaceDigit();
+      }
+    });
+
+    // =====================================================================
+    // SCREEN 3: STORY CAROUSEL LOGIC
+    // =====================================================================
+    function getCarouselSVG(index) {
+      if (index === 0) {
+        // Slide 3A: Cute White Bunny Holding Floating Hearts
+        return `
+          <svg viewBox="0 0 200 180" class="w-40 h-40">
+            <!-- Floating Red Hearts Around Bunny -->
+            <text x="145" y="42" font-size="18" class="animate-bounce">❤️</text>
+            <text x="160" y="75" font-size="15" class="animate-pulse">💗</text>
+            <text x="32" y="48" font-size="14" class="animate-pulse">💕</text>
+            <!-- Bunny Ears -->
+            <ellipse cx="78" cy="42" rx="13" ry="32" transform="rotate(-10 78 42)" fill="#ffffff" stroke="#4a0e1e" stroke-width="3"/>
+            <ellipse cx="78" cy="44" rx="6" ry="20" transform="rotate(-10 78 44)" fill="#ffb3c1"/>
+            <ellipse cx="118" cy="42" rx="13" ry="32" transform="rotate(12 118 42)" fill="#ffffff" stroke="#4a0e1e" stroke-width="3"/>
+            <ellipse cx="118" cy="44" rx="6" ry="20" transform="rotate(12 118 44)" fill="#ffb3c1"/>
+            <!-- Bunny Body & Cheeks -->
+            <ellipse cx="98" cy="136" rx="38" ry="30" fill="#ffffff" stroke="#4a0e1e" stroke-width="3"/>
+            <ellipse cx="98" cy="92" rx="46" ry="38" fill="#ffffff" stroke="#4a0e1e" stroke-width="3"/>
+            <!-- Cute Eyes & Rosy Cheeks -->
+            <circle cx="80" cy="88" r="4.5" fill="#4a0e1e"/>
+            <circle cx="116" cy="88" r="4.5" fill="#4a0e1e"/>
+            <ellipse cx="66" cy="95" rx="9" ry="5" fill="#ff758f" opacity="0.75"/>
+            <ellipse cx="130" cy="95" rx="9" ry="5" fill="#ff758f" opacity="0.75"/>
+            <!-- Cute Mouth -->
+            <path d="M93 96 Q98 102 103 96" stroke="#4a0e1e" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+            <!-- Bunny Paws Holding a Heart -->
+            <path d="M98 134 C98 134 80 122 80 112 C80 106 86 102 92 102 C95 102 97 104 98 106 C99 104 101 102 104 102 C110 102 116 106 116 112 C116 122 98 134 98 134 Z" fill="#ff4d6d" stroke="#4a0e1e" stroke-width="2"/>
+          </svg>
+        `;
+      } else if (index === 1) {
+        // Slide 3B: Romantic Floating Hearts Cluster (matches video)
+        return `
+          <div class="relative w-full h-full flex items-center justify-center">
+            <span class="text-5xl animate-gentle-pulse">💞</span>
+            <span class="absolute top-4 right-6 text-2xl animate-bounce">💗</span>
+            <span class="absolute bottom-5 left-6 text-2xl animate-pulse">💕</span>
+            <span class="absolute top-6 left-10 text-xl opacity-80">🌸</span>
+            <span class="absolute bottom-6 right-8 text-xl opacity-80">✨</span>
+          </div>
+        `;
+      } else {
+        // Slide 3C: Cute Crying White Bear at Table Wiping Tears
+        return `
+          <svg viewBox="0 0 210 180" class="w-44 h-44">
+            <!-- Bear Ears -->
+            <circle cx="62" cy="48" r="14" fill="#ffffff" stroke="#4a0e1e" stroke-width="3"/>
+            <circle cx="148" cy="48" r="14" fill="#ffffff" stroke="#4a0e1e" stroke-width="3"/>
+            <!-- Bear Head & Torso -->
+            <ellipse cx="105" cy="132" rx="45" ry="32" fill="#ffffff" stroke="#4a0e1e" stroke-width="3"/>
+            <ellipse cx="105" cy="86" rx="50" ry="42" fill="#ffffff" stroke="#4a0e1e" stroke-width="3"/>
+            <!-- Crying Streams of Tears -->
+            <path d="M78 82 Q72 105 76 125" stroke="#4cc9f0" stroke-width="6" fill="none" stroke-linecap="round"/>
+            <path d="M132 82 Q138 105 134 125" stroke="#4cc9f0" stroke-width="6" fill="none" stroke-linecap="round"/>
+            <!-- Sad Scrunched Eyes -->
+            <path d="M70 78 L84 83 L70 88" stroke="#4a0e1e" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M140 78 L126 83 L140 88" stroke="#4a0e1e" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+            <!-- Wailing Open Cute Mouth -->
+            <ellipse cx="105" cy="96" rx="10" ry="7" fill="#ff758f" stroke="#4a0e1e" stroke-width="2.5"/>
+            <!-- Wooden Table Surface at Bottom -->
+            <path d="M25 145 H185 L175 168 H35 Z" fill="#e09f3e" stroke="#4a0e1e" stroke-width="3" stroke-linejoin="round"/>
+            <!-- Bear Paws Resting on Table -->
+            <ellipse cx="75" cy="142" rx="14" ry="9" fill="#ffffff" stroke="#4a0e1e" stroke-width="3"/>
+            <ellipse cx="135" cy="136" rx="14" ry="9" fill="#ffffff" stroke="#4a0e1e" stroke-width="3"/>
+          </svg>
+        `;
+      }
+    }
+
+    function renderCarouselSlide() {
+      const slide = CONFIG.carousel[currentCarouselIndex];
+      const stage = document.getElementById("carousel-illustration");
+      const heading = document.getElementById("carousel-heading");
+      const message = document.getElementById("carousel-message");
+
+      if (slide.customImageUrl) {
+        stage.innerHTML = `<img src="${slide.customImageUrl}" alt="${slide.heading}" class="w-full h-full object-contain rounded-xl" />`;
+      } else {
+        stage.innerHTML = getCarouselSVG(currentCarouselIndex);
+      }
+
+      heading.textContent = slide.heading;
+      message.textContent = slide.message;
+
+      // Update indicator dots
+      [0, 1, 2].forEach(i => {
+        const dot = document.getElementById(`dot-${i}`);
+        if (i === currentCarouselIndex) {
+          dot.className = "w-6 h-2.5 rounded-full bg-[#c9184a] transition-all";
+        } else {
+          dot.className = "w-2.5 h-2.5 rounded-full bg-pink-300 transition-all";
+        }
+      });
+    }
+
+    function nextCarouselSlide() {
+      if (currentCarouselIndex < CONFIG.carousel.length - 1) {
+        currentCarouselIndex++;
+        playChime(["D5", "F5"], "16n");
+        renderCarouselSlide();
+      } else {
+        goToScreen(4);
+      }
+    }
+
+    function prevCarouselSlide() {
+      if (currentCarouselIndex > 0) {
+        currentCarouselIndex--;
+        playChime(["C5"], "16n");
+        renderCarouselSlide();
+      } else {
+        goToScreen(2);
+      }
+    }
+
+    // =====================================================================
+    // SCREEN 4: ENVELOPE ANIMATION
+    // =====================================================================
+    function openEnvelope() {
+      const env = document.getElementById("envelope-interactive");
+      if (env.classList.contains("envelope-open")) return;
+      env.classList.add("envelope-open");
+      playChime(["C5", "E5", "G5", "B5"], "8n");
+      setTimeout(() => {
+        goToScreen(5);
+      }, 850);
+    }
+
+    // =====================================================================
+    // SCREEN 6: FORGIVENESS METER ANIMATION
+    // =====================================================================
+    function startForgivenessMeter() {
+      forgivenessValue = 0;
+      const bar = document.getElementById("forgiveness-bar");
+      const label = document.getElementById("forgiveness-percent");
+      const btn = document.getElementById("forgiveness-btn");
+
+      bar.style.width = "0%";
+      label.textContent = "0% FORGIVEN ❤️";
+      btn.classList.add("opacity-60", "pointer-events-none");
+
+      if (forgivenessInterval) clearInterval(forgivenessInterval);
+
+      forgivenessInterval = setInterval(() => {
+        if (forgivenessValue < 100) {
+          forgivenessValue += 2;
+          if (forgivenessValue > 100) forgivenessValue = 100;
+          bar.style.width = `${forgivenessValue}%`;
+          label.textContent = `${forgivenessValue}% FORGIVEN ❤️`;
+
+          if (forgivenessValue === 100) {
+            clearInterval(forgivenessInterval);
+            playChime(["C5", "E5", "G5", "C6"], "8n");
+            btn.classList.remove("opacity-60", "pointer-events-none");
+            btn.classList.add("animate-bounce");
+            setTimeout(() => btn.classList.remove("animate-bounce"), 1500);
+          }
+        }
+      }, 38);
+    }
+
+    function boostForgivenessMeter() {
+      if (forgivenessValue < 100) {
+        forgivenessValue = Math.min(100, forgivenessValue + 20);
+      }
+    }
+
+    // =====================================================================
+    // SCREEN 7: REDEEMABLE COUPONS
+    // =====================================================================
+    function getCouponIllustration(id) {
+      if (id === "blooms") {
+        // Wrapped Pink Rose Bouquet SVG
+        return `
+          <svg viewBox="0 0 120 110" class="w-24 h-24 mx-auto">
+            <!-- Kraft Paper Wrap -->
+            <path d="M35 52 L60 102 L85 52 Z" fill="#f3d5b5" stroke="#d4a373" stroke-width="2"/>
+            <path d="M26 44 L60 65 L94 44 L82 32 L38 32 Z" fill="#fae1dd" stroke="#f4acb7" stroke-width="1.5"/>
+            <!-- Blossoms -->
+            <circle cx="46" cy="36" r="11" fill="#ff758f"/>
+            <circle cx="74" cy="36" r="11" fill="#ff4d6d"/>
+            <circle cx="60" cy="26" r="12" fill="#c9184a"/>
+            <circle cx="60" cy="44" r="11" fill="#ff8fa3"/>
+            <!-- Satin Ribbon Bow -->
+            <path d="M50 75 Q60 70 70 75" stroke="#c9184a" stroke-width="4" fill="none" stroke-linecap="round"/>
+          </svg>
+        `;
+      } else if (id === "cuddles") {
+        // Cute Teddy Bear Holding Heart SVG
+        return `
+          <svg viewBox="0 0 120 110" class="w-24 h-24 mx-auto">
+            <circle cx="38" cy="26" r="11" fill="#d4a373" stroke="#9c6644" stroke-width="2"/>
+            <circle cx="82" cy="26" r="11" fill="#d4a373" stroke="#9c6644" stroke-width="2"/>
+            <ellipse cx="60" cy="78" rx="26" ry="24" fill="#d4a373" stroke="#9c6644" stroke-width="2"/>
+            <circle cx="60" cy="46" r="24" fill="#e6ccb2" stroke="#9c6644" stroke-width="2"/>
+            <circle cx="51" cy="42" r="3" fill="#3d2b1f"/>
+            <circle cx="69" cy="42" r="3" fill="#3d2b1f"/>
+            <ellipse cx="60" cy="50" rx="7" ry="5" fill="#fff8f0"/>
+            <circle cx="60" cy="48" r="2.5" fill="#3d2b1f"/>
+            <!-- Plush Heart Held by Teddy -->
+            <path d="M60 90 C60 90 42 78 42 68 C42 62 47 58 52 58 C56 58 58 60 60 63 C62 60 64 58 68 58 C73 58 78 62 78 68 C78 78 60 90 60 90 Z" fill="#c9184a"/>
+          </svg>
+        `;
+      } else {
+        // Chocolate Bar in Pink Foil Wrapper SVG
+        return `
+          <svg viewBox="0 0 120 110" class="w-24 h-24 mx-auto">
+            <g transform="rotate(-14 60 55)">
+              <!-- Chocolate Squares -->
+              <rect x="38" y="16" width="44" height="55" rx="5" fill="#582f0e" stroke="#3d1e05" stroke-width="2"/>
+              <line x1="60" y1="16" x2="60" y2="55" stroke="#3d1e05" stroke-width="2"/>
+              <line x1="38" y1="34" x2="82" y2="34" stroke="#3d1e05" stroke-width="2"/>
+              <!-- Pink Foil Wrapper -->
+              <rect x="35" y="48" width="50" height="46" rx="4" fill="#ff758f" stroke="#c9184a" stroke-width="2"/>
+              <path d="M35 48 L43 42 L51 48 L60 42 L69 48 L77 42 L85 48 Z" fill="#fff0f3"/>
+              <text x="60" y="76" text-anchor="middle" fill="white" font-size="11" font-weight="bold">LOVE</text>
+            </g>
+          </svg>
+        `;
+      }
+    }
+
+    function renderCoupons() {
+      const grid = document.getElementById("coupons-grid");
+      grid.innerHTML = CONFIG.coupons.map((coupon, idx) => `
+        <div onclick="toggleCoupon(${idx})" class="coupon-card ${coupon.redeemed ? 'redeemed' : ''} flex flex-col items-center justify-between text-center">
+          <div class="w-full">
+            <div class="mb-2">
+              ${getCouponIllustration(coupon.id)}
+            </div>
+            <h3 class="text-sm sm:text-base font-extrabold text-[#800f2f] tracking-wide mb-2">
+              ${coupon.title}
+            </h3>
+            <div class="border-t border-dashed border-pink-300 my-2"></div>
+            <p class="text-xs sm:text-sm text-[#590d22]/85 leading-snug mb-4 px-1">
+              ${coupon.description}
+            </p>
+          </div>
+          <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold ${coupon.redeemed ? 'bg-emerald-100 text-emerald-800 border border-emerald-300' : 'bg-white/80 text-rose-700 border border-pink-200'}">
+            <span>${coupon.redeemed ? '✅' : '🎁'}</span>
+            <span>${coupon.redeemed ? 'Redeemable anytime' : 'Tap to claim'}</span>
+          </div>
+        </div>
+      `).join("");
+    }
+
+    function toggleCoupon(index) {
+      CONFIG.coupons[index].redeemed = !CONFIG.coupons[index].redeemed;
+      playChime(["E5", "A5"], "16n");
+      renderCoupons();
+    }
+
+    // =====================================================================
+    // SCREEN 8: FINALE CELEBRATION & REPLAY
+    // =====================================================================
+    function celebrateHeartBurst() {
+      playChime(["C5", "E5", "G5", "C6"], "4n");
+      const container = document.getElementById("hearts-container");
+      const burstIcons = ["💖", "🎉", "💗", "🌸", "❤️", "✨"];
+
+      for (let i = 0; i < 24; i++) {
+        const spark = document.createElement("span");
+        spark.className = "floating-heart";
+        spark.textContent = burstIcons[i % burstIcons.length];
+        spark.style.left = `${10 + Math.random() * 80}%`;
+        spark.style.fontSize = `${18 + Math.random() * 16}px`;
+        spark.style.animationDuration = `${3.5 + Math.random() * 3}s`;
+        spark.style.animationDelay = "0s";
+        container.appendChild(spark);
+        setTimeout(() => spark.remove(), 6500);
+      }
+    }
+
+    function replayExperience() {
+      enteredCode = "";
+      updatePasscodeUI();
+      const lockWrapper = document.getElementById("padlock-wrapper");
+      lockWrapper.classList.remove("unlocked");
+      const subtitle = document.getElementById("passcode-subtitle");
+      subtitle.textContent = "Something special is waiting for you";
+      subtitle.classList.remove("text-rose-600", "font-bold");
+      goToScreen(1);
+    }
+
+    // Initialize on Window Load
+    window.onload = function () {
+      applyConfiguration();
+      createFloatingHearts();
+      updatePasscodeUI();
+    };
+  </script>
+</body>
+</html>
